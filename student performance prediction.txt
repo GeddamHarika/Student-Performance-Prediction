@@ -1,0 +1,40 @@
+pip install pandas numpy matplotlib scikit-learn
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+data = {
+    'Hours': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    'Scores': [15, 25, 35, 45, 50, 60, 70, 75, 85, 95]
+}
+
+df = pd.DataFrame(data)
+df.head()
+plt.scatter(df['Hours'], df['Scores'], color='blue')
+plt.title('Hours vs Percentage')
+plt.xlabel('Hours Studied')
+plt.ylabel('Score (%)')
+plt.show()
+X = df[['Hours']]  # features
+y = df['Scores']   # target
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = LinearRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("Predicted Scores:", y_pred)
+df_compare = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+print(df_compare)
+plt.scatter(X_test, y_test, color='blue', label='Actual')
+plt.plot(X_test, y_pred, color='red', label='Predicted')
+plt.title('Actual vs Predicted Scores')
+plt.xlabel('Hours Studied')
+plt.ylabel('Score (%)')
+plt.legend()
+plt.show()
+print("Mean Absolute Error:", mean_absolute_error(y_test, y_pred))
+print("R² Score:", r2_score(y_test, y_pred))
+hours = [[9.5]]  # Example: 9.5 hours of study
+predicted_score = model.predict(hours)
+print(f"Predicted Score for studying {hours[0][0]} hours = {predicted_score[0]:.2f}%")
